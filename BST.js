@@ -127,7 +127,31 @@ class Tree {
       queue = queue.concat(level);
     }
   }
+  recursionLevelOrder(callback) {
+    let queue = [];
+    const buildQueue = (node = this.root, level = 0) => {
+      if (!node) {
+        return;
+      }
+      queue.push({ node: node, level: level });
+      if (node.left) {
+        let newLevel = level;
+        buildQueue(node.left, ++newLevel);
+      }
+      if (node.right) {
+        let newLevel = level;
+        buildQueue(node.right, ++newLevel);
+      }
+    };
+    buildQueue();
+    queue = queue.sort((a, b) => {
+      return a.level - b.level;
+    });
+    queue.forEach((item) => callback(item.node));
+  }
 }
-let testTree = new Tree([1, 2, 3, 4]);
+let testTree = new Tree([1, 2, 3, 4, 8, 9, 10, 11, 12, 13, 14]);
 prettyPrint(testTree.root);
 testTree.iterativeLevelOrder((node) => console.log(node.data));
+console.log("_________");
+testTree.recursionLevelOrder((node) => console.log(node.data));
