@@ -93,8 +93,41 @@ class Tree {
       return this.findLowestOnLeft(node.left, node);
     }
   }
+  find(value, node = this.root) {
+    if (node == null) {
+      return false;
+    }
+    if (node.data == value) {
+      return node;
+    }
+    let right = this.find(value, node.right);
+    let left = this.find(value, node.left);
+    if (right) {
+      return right;
+    } else if (left) {
+      return left;
+    } else {
+      return null;
+    }
+  }
+  iterativeLevelOrder(callback) {
+    let queue = [this.root];
+    while (queue.length > 0) {
+      let level = [];
+      for (let i = 0; i < queue.length; i++) {
+        callback(queue[i]);
+        if (queue[i].left) {
+          level.push(queue[i].left);
+        }
+        if (queue[i].right) {
+          level.push(queue[i].right);
+        }
+        queue.shift();
+      }
+      queue = queue.concat(level);
+    }
+  }
 }
-let testTree = new Tree([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+let testTree = new Tree([1, 2, 3, 4]);
 prettyPrint(testTree.root);
-testTree.remove(9);
-prettyPrint(testTree.root);
+testTree.iterativeLevelOrder((node) => console.log(node.data));
