@@ -114,13 +114,14 @@ class Tree {
     let queue = [this.root];
     while (queue.length > 0) {
       let level = [];
-      for (let i = 0; i < queue.length; i++) {
-        callback(queue[i]);
-        if (queue[i].left) {
-          level.push(queue[i].left);
+      let queueCopy = [...queue];
+      for (let i = 0; i < queueCopy.length; i++) {
+        callback(queueCopy[i]);
+        if (queueCopy[i].left) {
+          level.push(queueCopy[i].left);
         }
-        if (queue[i].right) {
-          level.push(queue[i].right);
+        if (queueCopy[i].right) {
+          level.push(queueCopy[i].right);
         }
         queue.shift();
       }
@@ -153,5 +154,3 @@ class Tree {
 let testTree = new Tree([1, 2, 3, 4, 8, 9, 10, 11, 12, 13, 14]);
 prettyPrint(testTree.root);
 testTree.iterativeLevelOrder((node) => console.log(node.data));
-console.log("_________");
-testTree.recursionLevelOrder((node) => console.log(node.data));
