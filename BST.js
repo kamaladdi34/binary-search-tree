@@ -53,18 +53,14 @@ class Tree {
         } else {
           parent.left = null;
         }
-        console.log("removing leaf");
       }
       if (node.right == null && node.left) {
         parent.left = node.left;
-        console.log("removing node with left child");
       }
       if (node.right && node.left == null) {
         parent.right = node.right;
-        console.log("removing node with right child");
       }
       if (node.right && node.left) {
-        console.log("removing node with both childs");
         let lowestOnRight = this.findLowestOnLeft(node.right, node);
         lowestOnRight.lowestNode.right = node.right;
         lowestOnRight.lowestNode.left = node.left;
@@ -112,11 +108,12 @@ class Tree {
   }
   iterativeLevelOrder(callback) {
     let queue = [this.root];
+    let valueOutput = [];
     while (queue.length > 0) {
       let level = [];
       let queueCopy = [...queue];
       for (let i = 0; i < queueCopy.length; i++) {
-        callback(queueCopy[i]);
+        callback ? callback(queueCopy[i]) : valueOutput.push(queueCopy[i].data);
         if (queueCopy[i].left) {
           level.push(queueCopy[i].left);
         }
@@ -127,9 +124,13 @@ class Tree {
       }
       queue = queue.concat(level);
     }
+    if (!callback) {
+      console.log(valueOutput);
+    }
   }
   recursionLevelOrder(callback) {
     let queue = [];
+    let valueOutput = [];
     const buildQueue = (node = this.root, level = 0) => {
       if (!node) {
         return;
@@ -148,9 +149,97 @@ class Tree {
     queue = queue.sort((a, b) => {
       return a.level - b.level;
     });
-    queue.forEach((item) => callback(item.node));
+    queue.forEach((item) =>
+      callback ? callback(item.node) : valueOutput.push(item.node.data)
+    );
+    if (!callback) {
+      console.log(valueOutput);
+    }
+  }
+  inOrder(node = this.root) {
+    if (node == null) {
+      return;
+    }
+    if (!node.right && !node.left) {
+      console.log(node.data);
+      return;
+    }
+    if (node.left) {
+      this.inOrder(node.left);
+    }
+    console.log(node.data);
+    if (node.right) {
+      this.inOrder(node.right);
+    }
+  }
+  preOrder(node = this.root) {
+    if (node == null) {
+      return;
+    } else {
+      console.log(node.data);
+    }
+    if (node.left) {
+      this.preOrder(node.left);
+    }
+    if (node.right) {
+      this.preOrder(node.right);
+    }
+  }
+  postOrder(node = this.root) {
+    if (node == null) {
+      return;
+    }
+    if (node.left) {
+      this.postOrder(node.left);
+    }
+    if (node.right) {
+      this.postOrder(node.right);
+    }
+    console.log(node.data);
+  }
+  height(node = this.root, level = 0) {
+    if (!node.left && !node.right) {
+      return level;
+    }
+    let leftLevel = level;
+    let rightLevel = level;
+    let left = node.left ? this.height(node.left, ++leftLevel) : 0;
+    let right = node.right ? this.height(node.right, ++rightLevel) : 0;
+    return Math.max(left, right);
+  }
+  depth(targetNode = this.root, node = this.root, depth = 0) {
+    if (node == null) {
+      return false;
+    }
+    if (node == targetNode) {
+      return depth;
+    }
+    let leftDepth = depth;
+    let rightDepth = depth;
+    let right = this.depth(targetNode, node.right, ++leftDepth);
+    let left = this.depth(targetNode, node.left, ++rightDepth);
+    if (right) {
+      return right;
+    } else if (left) {
+      return left;
+    } else {
+      return null;
+    }
+  }
+  isBalanced(node = this.root, isBalanced = true) {
+    if (!node) {
+      return;
+    }
+    let leftHeight = node.left ? this.height(node.left) : 0;
+    let rightHeight = node.right ? this.height(node.right) : 0;
+    console.log(leftHeight, rightHeight);
+    if (Math.abs(leftHeight - rightHeight) >= 2) {
+      isBalanced = false;
+    }
+    this.isBalanced(node.right);
+    this.isBalanced(node.left);
+    return isBalanced;
   }
 }
-let testTree = new Tree([1, 2, 3, 4, 8, 9, 10, 11, 12, 13, 14]);
+let testTree = new Tree([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 prettyPrint(testTree.root);
-testTree.iterativeLevelOrder((node) => console.log(node.data));
