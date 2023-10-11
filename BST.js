@@ -6,7 +6,7 @@ class Node {
     this.right = right;
   }
 }
-class Tree {
+export class Tree {
   constructor(array) {
     this.root = this.buildTree(cleanArray(array));
   }
@@ -256,17 +256,3 @@ class Tree {
     this.root = this.buildTree(this.inOrder(this.root));
   }
 }
-let testTree = new Tree([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-prettyPrint(testTree.root);
-console.log(testTree.inOrder());
-testTree.remove(4);
-testTree.remove(5);
-testTree.remove(7);
-testTree.remove(8);
-testTree.remove(10);
-console.log(testTree.isBalanced());
-prettyPrint(testTree.root);
-console.log(testTree.inOrder());
-testTree.rebalance();
-console.log(testTree.isBalanced());
-prettyPrint(testTree.root);
