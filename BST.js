@@ -231,18 +231,26 @@ class Tree {
       return null;
     }
   }
-  isBalanced(node = this.root, isBalanced = true) {
-    if (!node) {
-      return;
+  isBalanced(node = this.root) {
+    return this.checkBalance(node) !== -1;
+  }
+  checkBalance(node) {
+    if (node === null) {
+      return 0;
     }
-    let leftHeight = node.left ? this.height(node.left) : 0;
-    let rightHeight = node.right ? this.height(node.right) : 0;
-    if (Math.abs(leftHeight - rightHeight) >= 2) {
-      isBalanced = false;
+    const leftHeight = this.checkBalance(node.left);
+    if (leftHeight === -1) {
+      return -1;
     }
-    this.isBalanced(node.right);
-    this.isBalanced(node.left);
-    return isBalanced;
+    const rightHeight = this.checkBalance(node.right);
+    if (rightHeight === -1) {
+      return -1;
+    }
+    const heightDifference = Math.abs(leftHeight - rightHeight);
+    if (heightDifference > 1) {
+      return -1;
+    }
+    return Math.max(leftHeight, rightHeight) + 1;
   }
   rebalance() {
     this.root = this.buildTree(this.inOrder(this.root));
