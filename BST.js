@@ -237,7 +237,6 @@ class Tree {
     }
     let leftHeight = node.left ? this.height(node.left) : 0;
     let rightHeight = node.right ? this.height(node.right) : 0;
-    console.log(leftHeight, rightHeight);
     if (Math.abs(leftHeight - rightHeight) >= 2) {
       isBalanced = false;
     }
@@ -257,7 +256,9 @@ testTree.remove(5);
 testTree.remove(7);
 testTree.remove(8);
 testTree.remove(10);
+console.log(testTree.isBalanced());
 prettyPrint(testTree.root);
 console.log(testTree.inOrder());
 testTree.rebalance();
+console.log(testTree.isBalanced());
 prettyPrint(testTree.root);
