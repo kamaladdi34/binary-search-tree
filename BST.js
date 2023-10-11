@@ -156,21 +156,26 @@ class Tree {
       console.log(valueOutput);
     }
   }
-  inOrder(node = this.root) {
-    if (node == null) {
-      return;
+  inOrder(targetNode = this.root, callback) {
+    let outputValue = [];
+    function inOrderRecursion(node = targetNode) {
+      if (node == null) {
+        return;
+      }
+      if (!node.right && !node.left) {
+        callback ? callback(node) : outputValue.push(node.data);
+        return;
+      }
+      if (node.left) {
+        inOrderRecursion(node.left);
+      }
+      callback ? callback(node) : outputValue.push(node.data);
+      if (node.right) {
+        inOrderRecursion(node.right);
+      }
     }
-    if (!node.right && !node.left) {
-      console.log(node.data);
-      return;
-    }
-    if (node.left) {
-      this.inOrder(node.left);
-    }
-    console.log(node.data);
-    if (node.right) {
-      this.inOrder(node.right);
-    }
+    inOrderRecursion();
+    return callback ? undefined : outputValue;
   }
   preOrder(node = this.root) {
     if (node == null) {
@@ -240,6 +245,19 @@ class Tree {
     this.isBalanced(node.left);
     return isBalanced;
   }
+  rebalance() {
+    this.root = this.buildTree(this.inOrder(this.root));
+  }
 }
 let testTree = new Tree([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+prettyPrint(testTree.root);
+console.log(testTree.inOrder());
+testTree.remove(4);
+testTree.remove(5);
+testTree.remove(7);
+testTree.remove(8);
+testTree.remove(10);
+prettyPrint(testTree.root);
+console.log(testTree.inOrder());
+testTree.rebalance();
 prettyPrint(testTree.root);
